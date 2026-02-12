@@ -285,7 +285,7 @@ static void remove_mailbox_cb(GtkAction *action, gpointer data)
 		(_("Really remove the mailbox `%s' ?\n"
 		   "(The messages are NOT deleted from the disk)"), name);
 	avalue = alertpanel_full(_("Remove mailbox"), message,
-				 GTK_STOCK_CANCEL, NULL, _("_Remove"), NULL,
+				 NULL, _("_Cancel"), NULL, _("_Remove"),
 				 NULL, NULL, ALERTFOCUS_FIRST,
 				 FALSE, NULL, ALERT_WARNING);
 	g_free(message);
@@ -319,7 +319,7 @@ static void delete_folder_cb(GtkAction *action, gpointer data)
 		(_("All folder(s) and message(s) under `%s' will be deleted.\n"
 		   "Do you really want to delete?"), name);
 	avalue= alertpanel_full(_("Delete folder"), message,
-				 GTK_STOCK_CANCEL, NULL, GTK_STOCK_DELETE, NULL,
+				 NULL, _("_Cancel"), NULL, _("_Delete"),
 				 NULL, NULL, ALERTFOCUS_FIRST,
 				 FALSE, NULL, ALERT_NOTICE);
 	g_free(message);

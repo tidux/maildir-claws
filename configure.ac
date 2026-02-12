@@ -68,8 +68,7 @@ AM_PATH_GLIB_2_0(2.6.0,,
         AC_MSG_ERROR(Test for GLIB failed. See the file 'INSTALL' for help.),
         gthread)
 
-AM_PATH_GTK_2_0(2.6.0,,
-	AC_MSG_ERROR(Test for GTK failed. See the file 'INSTALL' for help.))
+PKG_CHECK_MODULES(GTK, gtk+-3.0 >= 3.0.0)
 
 dnl Berkeley DB
 
