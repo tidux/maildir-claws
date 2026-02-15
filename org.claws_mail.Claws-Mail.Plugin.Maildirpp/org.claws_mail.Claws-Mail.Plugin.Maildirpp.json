@@ -1,0 +1,92 @@
+{
+  "id": "org.claws_mail.ClawsMail.Plugin.Maildirpp",
+  "branch": "stable",
+  "runtime": "org.claws_mail.Claws-Mail",
+  "runtime-version": "stable",
+  "sdk": "org.freedesktop.Sdk//25.08",
+  "build-extension": true,
+  "separate-locales": false,
+  "appstream-compose": false,
+  "build-options": {
+    "prefix": "/app/extra-plugins/Maildirpp",
+    "strip": true,
+    "no-debuginfo": true
+  },
+  "modules": [
+    {
+      "name": "claws-mail-dev",
+      "buildsystem": "simple",
+      "build-commands": [
+        "mkdir -p ${FLATPAK_DEST}/include/claws-mail/common ${FLATPAK_DEST}/include/claws-mail/gtk ${FLATPAK_DEST}/lib/pkgconfig",
+        "cp src/*.h ${FLATPAK_DEST}/include/claws-mail/",
+        "cp src/common/*.h ${FLATPAK_DEST}/include/claws-mail/common/",
+        "cp src/gtk/*.h ${FLATPAK_DEST}/include/claws-mail/gtk/",
+        "sed 's/^#define USE_ENCHANT.*$//' claws-features.h > ${FLATPAK_DEST}/include/claws-mail/common/claws-features.h",
+        "cat > ${FLATPAK_DEST}/lib/pkgconfig/claws-mail.pc <<PCEOF\nprefix=${FLATPAK_DEST}\nexec_prefix=${FLATPAK_DEST}\nlibdir=${FLATPAK_DEST}/lib\nincludedir=${FLATPAK_DEST}/include\npkgincludedir=${FLATPAK_DEST}/include/claws-mail\nplugindir=/app/lib/claws-mail/plugins\n\nName: Claws Mail\nDescription: Claws Mail\nVersion: 4.3.1\nRequires: glib-2.0 gtk+-3.0\nCflags: -I\\${pkgincludedir}/common -I\\${pkgincludedir}/gtk -I\\${pkgincludedir}\nPCEOF"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://www.claws-mail.org/releases/claws-mail-4.3.1.tar.xz",
+          "sha256": "d8adf210c767ab58252dfc5ab3c69e603d7ffdb7281a1e3340d2d86062f468a6"
+        }
+      ],
+      "cleanup": [
+        "/include/claws-mail",
+        "/lib/pkgconfig/claws-mail.pc"
+      ]
+    },
+    {
+      "name": "libdb",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cd build_unix && sed -i 's/if defined(HAVE_ATOMIC_X86_GCC_ASSEMBLY)/if defined(HAVE_ATOMIC_X86_GCC_ASSEMBLY) \\&\\& !defined(__cplusplus)/' ../src/dbinc/atomic.h",
+        "cd build_unix && CFLAGS='-Wno-implicit-function-declaration -Wno-implicit-int -Wno-int-conversion -Wno-incompatible-pointer-types' ../dist/configure --prefix=${FLATPAK_DEST} --enable-compat185 --enable-shared --disable-static --enable-cxx --disable-java --disable-tcl --disable-replication --with-mutex=POSIX/pthreads/library",
+        "cd build_unix && make -j${FLATPAK_BUILDER_N_JOBS}",
+        "cd build_unix && make install"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz",
+          "sha256": "e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628"
+        }
+      ],
+      "cleanup": [
+        "/bin",
+        "/include",
+        "/docs",
+        "*.la"
+      ]
+    },
+    {
+      "name": "maildir",
+      "buildsystem": "autotools",
+      "make-args": ["-C", "src"],
+      "make-install-args": ["-C", "src"],
+      "build-options": {
+        "cflags": "-I/app/extra-plugins/Maildirpp/include",
+        "ldflags": "-L/app/extra-plugins/Maildirpp/lib",
+        "env": {
+          "PKG_CONFIG_PATH": "/app/extra-plugins/Maildirpp/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"
+        }
+      },
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/tidux/maildir-claws.git",
+          "commit": "128522cafb77435fe77a470644b7bcc6752ce3ec"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "echo '#include \"pluginconfig.h\"' > config.h"
+          ]
+        }
+      ],
+      "cleanup": [
+        "*.la"
+      ]
+    }
+  ]
+}

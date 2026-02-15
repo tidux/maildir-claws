@@ -1,0 +1,449 @@
+{
+  "app-id": "org.claws_mail.Claws-Mail",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "25.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "claws-mail.sh",
+  "build-options": {
+    "strip": true,
+    "no-debuginfo": true
+  },
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=x11",
+    "--socket=wayland",
+    "--socket=pcsc",
+    "--system-talk-name=org.freedesktop.NetworkManager",
+    "--talk-name=org.freedesktop.Notifications",
+    "--filesystem=home",
+    "--filesystem=xdg-run/gnupg:ro",
+    "--env=PATH=/app/bin:/usr/bin:/app/extra-plugins/bin",
+    "--env=GDK_PIXBUF_MODULE_FILE=/app/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+  ],
+  "add-extensions": {
+    "org.claws_mail.ClawsMail.Plugin": {
+      "directory": "extra-plugins",
+      "subdirectories": true,
+      "merge-dirs": "lib;bin;share",
+      "add-ld-path": "lib",
+      "autodelete": true,
+      "no-autodownload": true
+    }
+  },
+  "modules": [
+    {
+      "name": "libetpan",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--with-openssl=/usr/include/openssl",
+        "--with-gnutls=/usr/include/gnutls",
+        "--with-sasl=/usr/include/sasl",
+        "--with-zlib"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/dinhvh/libetpan/archive/80f0f515555de2798c6984db507d406d0153f1f5.zip",
+          "sha256": "0e6b6d08721df3c8f0036547e963d313d6a130cefe881c8e12f6dc46b347a68f"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "ytnef",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/Yeraze/ytnef/archive/v1.9.3.tar.gz",
+          "sha256": "41a0033bde33c86a7e4aa4e14bb822dd03084098638e7d6557263e47e80b4f4f"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "libopenjpeg",
+      "buildsystem": "cmake-ninja",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.5.4.tar.gz",
+          "sha256": "a695fbe19c0165f295a8531b1e4e855cd94d0875d2f88ec4b61080677e27188a"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/lib/openjpeg-*",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "libpoppler-glib",
+      "buildsystem": "cmake-ninja",
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=release",
+        "-DENABLE_BOOST=OFF",
+        "-DENABLE_QT5=OFF",
+        "-DENABLE_QT6=OFF"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://poppler.freedesktop.org/poppler-25.09.1.tar.xz",
+          "sha256": "0c1091d01d3dd1664a13816861e812d02b29201e96665454b81b52d261fad658"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "libical",
+      "buildsystem": "cmake-ninja",
+      "config-opts": [
+        "-DENABLE_GTK_DOC=OFF"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/libical/libical/archive/refs/tags/v3.0.20.tar.gz",
+          "sha256": "e73de92f5a6ce84c1b00306446b290a2b08cdf0a80988eca0a2c9d5c3510b4c2"
+        }
+      ],
+      "cleanup": [
+        "/libexec",
+        "/lib/pkgconfig",
+        "/lib/cmake",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "libgumbo",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://codeberg.org/gumbo-parser/gumbo-parser/archive/0.12.1.tar.gz",
+          "sha256": "c0bb5354e46539680724d638dbea07296b797229a7e965b13305c930ddc10d82"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "graphviz",
+      "buildsystem": "autotools",
+      "config-opts": [],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://gitlab.com/graphviz/graphviz/-/archive/2.50.0/graphviz-2.50.0.tar.bz2",
+          "sha256": "262b4285530f5804f656e643bfccf0e910fcfc483639921209e16fd7a04bebe0"
+        }
+      ],
+      "cleanup": [
+        "/libexec",
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "bogofilter",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--disable-rpath",
+        "--with-database=sqlite3"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://git.code.sf.net/p/bogofilter/git",
+          "commit": "db7ac4e79f6d80f924edf5d3bd1179bf68388d27"
+        },
+        {
+          "type": "script",
+          "dest-filename": "autogen.sh",
+          "commands": [
+            "rm -rf README web",
+            "(shopt -s dotglob; mv bogofilter/* .)",
+            "echo \"# Skip for Flatpak build\" > doc/Makefile.am",
+            "autoreconf -fi"
+          ]
+        }
+      ],
+      "cleanup": []
+    },
+    {
+      "name": "enchant",
+      "buildsystem": "autotools",
+      "config-opts": [],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/rrthomas/enchant/releases/download/v2.8.12/enchant-2.8.12.tar.gz",
+          "sha256": "20e5fab2ca0f95ba9d1ef5052fe5b028e3e1d66d4cdea6b9adfcbd3e524c2a09"
+        }
+      ],
+      "cleanup": [
+        "/libexec",
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    "shared-modules/intltool/intltool-0.51.json",
+    {
+      "name": "libndp",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "http://libndp.org/files/libndp-1.8.tar.gz",
+          "sha256": "88ffb66ee2eb527f146f5c02f5ccbc38ba97d2b0d57eb46bfba488821ab0c02b"
+        }
+      ],
+      "cleanup": [
+        "/libexec",
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "NetworkManager",
+      "buildsystem": "meson",
+      "build-options": {
+        "cflags": "-ltinfo",
+        "cxxflags": "-ltinfo"
+      },
+      "config-opts": [
+        "-Dudev_dir=no",
+        "-Ddbus_conf_dir=no",
+        "-Dsystemdsystemunitdir=no",
+        "-Dsession_tracking=systemd",
+        "-Dpolkit=false",
+        "-Dlibaudit=no",
+        "-Ddnsmasq=/usr/bin/true",
+        "-Ddocs=false",
+        "-Dintrospection=false",
+        "-Diptables=/usr/bin/true",
+        "-Dlibpsl=false",
+        "-Dmodem_manager=false",
+        "-Dnmcli=false",
+        "-Dnmtui=false",
+        "-Dovs=false",
+        "-Dppp=false",
+        "-Dqt=false",
+        "-Dselinux=false",
+        "-Dsystemd_journal=false",
+        "-Dtests=no",
+        "-Dvapi=false"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/1.38.6/NetworkManager-1.38.6.tar.bz2",
+          "sha256": "af20f65827c4fdb9000c992ac715cff28a7a5a7d344353947d96a98262a492fd"
+        }
+      ],
+      "cleanup": [
+        "/libexec",
+        "/lib/pkgconfig",
+        "/lib/cmake",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    "shared-modules/dbus-glib/dbus-glib.json",
+    "shared-modules/libcanberra/libcanberra.json",
+    {
+      "name": "pcsc-lite",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--disable-libudev",
+        "--disable-libsystemd",
+        "--without-systemdsystemunitdir",
+        "--disable-serial",
+        "--disable-usb",
+        "--disable-documentation"
+      ],
+      "post-install": [
+        "rm /app/sbin/pcscd",
+        "rmdir /app/sbin || true"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/LudovicRousseau/PCSC/archive/refs/tags/1.9.9.tar.gz",
+          "sha256": "856a1daed9a5ae1ac265c75ce9f81743e66a972e5be5a1d3a2196ed23f75ea26"
+        }
+      ]
+    },
+    "shared-modules/gtk2/gtk2.json",
+    {
+      "name": "pinentry",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--enable-pinentry-gtk2",
+        "--disable-ncurses",
+        "--disable-fallback-curses",
+        "--disable-pinentry-curses",
+        "--disable-pinentry-emacs",
+        "--disable-inside-emacs",
+        "--disable-pinentry-gnome3",
+        "--disable-pinentry-qt",
+        "--disable-pinentry-qt4",
+        "--disable-pinentry-qt5",
+        "--disable-pinentry-tty",
+        "--disable-pinentry-tqt",
+        "--disable-pinentry-fltk"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://gnupg.org/ftp/gcrypt/pinentry/pinentry-1.3.1.tar.bz2",
+          "sha256": "bc72ee27c7239007ab1896c3c2fae53b076e2c9bd2483dc2769a16902bce8c04"
+        }
+      ]
+    },
+    "shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json",
+    {
+      "name": "gdk-pixbuf-loaders-others",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dgtk_doc=false",
+        "-Dman=false",
+        "-Dintrospection=disabled",
+        "-Dinstalled_tests=false",
+        "-Dtests=false",
+        "-Ddocumentation=false",
+        "-Dglycin=disabled",
+        "-Dandroid=disabled",
+        "-Dbuiltin_loaders=none",
+        "-Dpng=disabled",
+        "-Dtiff=disabled",
+        "-Djpeg=disabled",
+        "-Dgif=disabled",
+        "-Dothers=enabled"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/2.44.3/gdk-pixbuf-2.44.3.tar.gz",
+          "sha256": "cc591e3949a95e2f7b50173c9373df8846648b15aa596d9e7ec7258381bfac0d"
+        }
+      ],
+      "post-install": [
+        "GDK_PIXBUF_MODULEDIR=${FLATPAK_DEST}/lib/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders > ${FLATPAK_DEST}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache",
+        "gdk-pixbuf-query-loaders >> ${FLATPAK_DEST}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+      ],
+      "cleanup": [
+        "/bin",
+        "/include",
+        "/share",
+        "/lib/pkgconfig",
+        "/lib/libgdk_pixbuf-2.0.so.*"
+      ]
+    },
+    {
+      "name": "claws-mail",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--enable-networkmanager",
+        "--enable-tnef_parse-plugin",
+        "--enable-pdf_viewer-plugin",
+        "--enable-vcalendar-plugin",
+        "--enable-litehtml_viewer-plugin",
+        "--enable-bogofilter-plugin",
+        "--disable-perl-plugin",
+        "--disable-dillo-plugin",
+        "--disable-bsfilter-plugin"
+      ],
+      "post-install": [
+        "mkdir -p ${FLATPAK_DEST}/extra-plugins"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://www.claws-mail.org/releases/claws-mail-4.3.1.tar.xz",
+          "sha256": "d8adf210c767ab58252dfc5ab3c69e603d7ffdb7281a1e3340d2d86062f468a6"
+        },
+        {
+          "type": "patch",
+          "path": "patches/plugin-chooser.patch"
+        }
+      ],
+      "cleanup": [
+        "/lib/pkgconfig",
+        "/include",
+        "*.a",
+        "*.la"
+      ]
+    },
+    {
+      "name": "claws-mail-post-install",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm644 org.claws_mail.Claws-Mail.appdata.xml /app/share/metainfo/org.claws_mail.Claws-Mail.appdata.xml",
+        "install -Dm644 org.claws_mail.Claws-Mail.desktop /app/share/applications/org.claws_mail.Claws-Mail.desktop",
+        "install -Dm644 claws-mail-48x48.png /app/share/icons/hicolor/48x48/apps/org.claws_mail.Claws-Mail.png",
+        "install -Dm644 claws-mail-64x64.png /app/share/icons/hicolor/64x64/apps/org.claws_mail.Claws-Mail.png",
+        "install -Dm644 claws-mail-128x128.png /app/share/icons/hicolor/128x128/apps/org.claws_mail.Claws-Mail.png",
+        "install -Dm755 claws-mail.sh /app/bin/claws-mail.sh"
+      ],
+      "sources": [
+        {
+          "type": "file",
+          "path": "org.claws_mail.Claws-Mail.appdata.xml"
+        },
+        {
+          "type": "file",
+          "path": "static/org.claws_mail.Claws-Mail.desktop"
+        },
+        {
+          "type": "file",
+          "path": "static/claws-mail-48x48.png"
+        },
+        {
+          "type": "file",
+          "path": "static/claws-mail-64x64.png"
+        },
+        {
+          "type": "file",
+          "path": "static/claws-mail-128x128.png"
+        },
+        {
+          "type": "file",
+          "path": "static/claws-mail.sh"
+        }
+      ]
+    }
+  ]
+}
